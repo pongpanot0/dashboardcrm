@@ -1,15 +1,14 @@
-import logo from "./logo.svg";
-
-import Sidebar from "./components/sidebar/Sidebar";
 import './App.css'
-import Maindash from "./components/MainDash/Maindash";
-import RightSide from "./components/RightSide/RightSide";
+import MainDash from './components/MainDash/MainDash';
+import RightSide from '../src/components/RigtSide/RightSide';
+import Sidebar from '../src/components/Sidebar';
+
 function App() {
   return (
     <div className="App">
       <div className="AppGlass">
-        <Sidebar />
-        <Maindash/>
+        <Sidebar/>
+        <MainDash/>
         <RightSide/>
       </div>
     </div>

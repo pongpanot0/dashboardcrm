@@ -1,13 +1,15 @@
 import React from "react";
-import Card from "../Cards/Card";
-import { cardsData } from "../data/Data";
 import "./Cards.css";
+import { cardsData } from "../../Data/Data";
+
+import Card from "../Card/Card";
+
 const Cards = () => {
   return (
     <div className="Cards">
       {cardsData.map((card, id) => {
         return (
-          <div className="parentContainer">
+          <div className="parentContainer" key={id}>
             <Card
               title={card.title}
               color={card.color}

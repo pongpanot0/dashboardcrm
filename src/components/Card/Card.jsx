@@ -1,14 +1,15 @@
-import React from "react";
-import { useState } from "react";
-import { motion, AnimateSharedLayout } from "framer-motion";
+import React, { useState } from "react";
+import "./Card.css";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import "./Card.css";
-import Chart from "react-apexcharts";
+import { motion, AnimateSharedLayout } from "framer-motion";
 import { UilTimes } from "@iconscout/react-unicons";
+import Chart from "react-apexcharts";
+
+// parent Card
+
 const Card = (props) => {
   const [expanded, setExpanded] = useState(false);
-
   return (
     <AnimateSharedLayout>
       {expanded ? (
@@ -20,7 +21,7 @@ const Card = (props) => {
   );
 };
 
-//CompactCard
+// Compact Card
 function CompactCard({ param, setExpanded }) {
   const Png = param.png;
   return (
@@ -30,8 +31,8 @@ function CompactCard({ param, setExpanded }) {
         background: param.color.backGround,
         boxShadow: param.color.boxShadow,
       }}
+      layoutId="expandableCard"
       onClick={setExpanded}
-      leyoutId="expandableCard"
     >
       <div className="radialBar">
         <CircularProgressbar
@@ -49,8 +50,7 @@ function CompactCard({ param, setExpanded }) {
   );
 }
 
-//ExpandedCard
-
+// Expanded Card
 function ExpandedCard({ param, setExpanded }) {
   const data = {
     options: {
@@ -58,6 +58,7 @@ function ExpandedCard({ param, setExpanded }) {
         type: "area",
         height: "auto",
       },
+
       dropShadow: {
         enabled: false,
         enabledOnSeries: undefined,
@@ -67,9 +68,13 @@ function ExpandedCard({ param, setExpanded }) {
         color: "#000",
         opacity: 0.35,
       },
+
       fill: {
-        color: ["#fff"],
+        colors: ["#fff"],
         type: "gradient",
+      },
+      dataLabels: {
+        enabled: false,
       },
       stroke: {
         curve: "smooth",
@@ -87,15 +92,17 @@ function ExpandedCard({ param, setExpanded }) {
         type: "datetime",
         categories: [
           "2018-09-19T00:00:00.000Z",
-          "2018-09-19T01:00:00.000Z",
-          "2018-09-19T02:00:00.000Z",
-          "2018-09-19T03:00:00.000Z",
-          "2018-09-19T04:00:00.000Z",
-          "2018-09-19T05:00:00.000Z",
+          "2018-09-19T01:30:00.000Z",
+          "2018-09-19T02:30:00.000Z",
+          "2018-09-19T03:30:00.000Z",
+          "2018-09-19T04:30:00.000Z",
+          "2018-09-19T05:30:00.000Z",
+          "2018-09-19T06:30:00.000Z",
         ],
       },
     },
   };
+
   return (
     <motion.div
       className="ExpandedCard"
@@ -106,16 +113,13 @@ function ExpandedCard({ param, setExpanded }) {
       layoutId="expandableCard"
     >
       <div style={{ alignSelf: "flex-end", cursor: "pointer", color: "white" }}>
-        <UilTimes
-          onClick={setExpanded}
-          
-        />
+        <UilTimes onClick={setExpanded} />
       </div>
-      <span>{param.title}</span>
+        <span>{param.title}</span>
       <div className="chartContainer">
-        <Chart series={param.series} type="area" options={data.options} />{" "}
+        <Chart options={data.options} series={param.series} type="area" />
       </div>
-      <span>Last 24 Hour</span>
+      <span>Last 24 hours</span>
     </motion.div>
   );
 }

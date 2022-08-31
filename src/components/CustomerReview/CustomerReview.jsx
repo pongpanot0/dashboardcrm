@@ -1,5 +1,7 @@
 import React from "react";
 import Chart from "react-apexcharts";
+
+
 const CustomerReview = () => {
   const data = {
     series: [
@@ -46,18 +48,16 @@ const CustomerReview = () => {
         ],
       },
       yaxis: {
-        show: false,
+        show: false
       },
-      toolbar: {
-        show: false,
-      },
+      toolbar:{
+        show: false
+      }
     },
   };
-  return (
-    <div className="CustomerReview">
-    <Chart options={data.options} series={data.series} type="area" />
-    </div>
-  );
+  return <div className="CustomerReview">
+        <Chart options={data.options} series={data.series} type="area" />
+  </div>;
 };
 
 export default CustomerReview;
