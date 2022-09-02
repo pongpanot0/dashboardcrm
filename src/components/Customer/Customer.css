@@ -1,6 +1,6 @@
-.RightSide{
+.MainDash{
+    /* padding-top: 1rem; */
     display: flex;
     flex-direction: column;
-    width: 95%;
     justify-content: space-evenly;
 }

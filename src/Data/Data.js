@@ -1,3 +1,4 @@
+// Sidebar imports
 import {
   UilEstate,
   UilClipboardAlt,
@@ -5,32 +6,72 @@ import {
   UilPackage,
   UilChart,
   UilSignOutAlt,
-  UilUsdSquare,
-  UilMoneyWithdrawal,
 } from "@iconscout/react-unicons";
-import img1 from "../img/151141.jpg";
-export const SidebarDate = [
+
+// Analytics Cards imports
+import { UilUsdSquare, UilMoneyWithdrawal } from "@iconscout/react-unicons";
+import axios from "axios";
+import React from "react";
+// Recent Card Imports
+import img1 from "../imgs/img1.png";
+import img2 from "../imgs/img2.png";
+import img3 from "../imgs/img3.png";
+
+// Sidebar Data
+export const SidebarData = [
   {
     icon: UilEstate,
-    heading: "dashboard",
+    heading: "Dashboard",
+    Link: "/",
   },
   {
     icon: UilClipboardAlt,
     heading: "Orders",
+    Link: "/Order",
   },
   {
     icon: UilUsersAlt,
     heading: "Customers",
+    Link: "/Customer",
   },
   {
     icon: UilPackage,
-    heading: "Product",
+    heading: "Products",
+    Link: "/product",
+  },
+  {
+    icon: UilChart,
+    heading: "Supplier",
+    Link: "/Supplier",
   },
   {
     icon: UilChart,
     heading: "Analytics",
+    Link: "/Customer",
+  },
+  {
+    icon: UilChart,
+    heading: "Setting",
+    Link: "/Setting",
   },
 ];
+
+/*  */
+// Analytics Cards Data
+
+export const useCategoryData = (props) => {
+  const [Category, setCategory] = React.useState("");
+  React.useEffect(() => {
+    const items = localStorage.getItem("company_id");
+    axios
+      .get(`${process.env.REACT_APP_API_KEY}/supplier/getall/1`)
+      .then((res) => {
+        console.log(res.data);
+        setCategory(res.data.data);
+      });
+  }, []);
+  return;
+};
 
 export const cardsData = [
   {
@@ -60,7 +101,7 @@ export const cardsData = [
     png: UilMoneyWithdrawal,
     series: [
       {
-        name: "Revenue",
+        name: "Sale",
         data: [10, 100, 50, 70, 80, 30, 40],
       },
     ],
@@ -83,6 +124,8 @@ export const cardsData = [
     ],
   },
 ];
+
+// Recent Update Card Data
 export const UpdatesData = [
   {
     img: img1,
@@ -91,13 +134,13 @@ export const UpdatesData = [
     time: "25 seconds ago",
   },
   {
-    img: img1,
+    img: img2,
     name: "James Bond",
     noti: "has received Samsung gadget for charging battery.",
     time: "30 minutes ago",
   },
   {
-    img: img1,
+    img: img3,
     name: "Iron Man",
     noti: "has ordered Apple smart watch, samsung Gear 2500mh battery.",
     time: "2 hours ago",
