@@ -10,8 +10,8 @@ import {
 
 // Analytics Cards imports
 import { UilUsdSquare, UilMoneyWithdrawal } from "@iconscout/react-unicons";
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
-
+import axios from "axios";
+import React from "react";
 // Recent Card Imports
 import img1 from "../imgs/img1.png";
 import img2 from "../imgs/img2.png";
@@ -22,26 +22,57 @@ export const SidebarData = [
   {
     icon: UilEstate,
     heading: "Dashboard",
+    Link: "/",
   },
   {
     icon: UilClipboardAlt,
     heading: "Orders",
+    Link: "/Order",
   },
   {
     icon: UilUsersAlt,
     heading: "Customers",
+    Link: "/Customer",
   },
   {
     icon: UilPackage,
-    heading: 'Products'
+    heading: "Products",
+    Link: "/product",
   },
   {
     icon: UilChart,
-    heading: 'Analytics'
+    heading: "Supplier",
+    Link: "/Supplier",
+  },
+  {
+    icon: UilChart,
+    heading: "Analytics",
+    Link: "/Customer",
+  },
+  {
+    icon: UilChart,
+    heading: "Setting",
+    Link: "/Setting",
   },
 ];
 
+/*  */
 // Analytics Cards Data
+
+export const useCategoryData = (props) => {
+  const [Category, setCategory] = React.useState("");
+  React.useEffect(() => {
+    const items = localStorage.getItem("company_id");
+    axios
+      .get(`${process.env.REACT_APP_API_KEY}/supplier/getall/1`)
+      .then((res) => {
+        console.log(res.data);
+        setCategory(res.data.data);
+      });
+  }, []);
+  return;
+};
+
 export const cardsData = [
   {
     title: "Sales",
@@ -70,7 +101,7 @@ export const cardsData = [
     png: UilMoneyWithdrawal,
     series: [
       {
-        name: "Revenue",
+        name: "Sale",
         data: [10, 100, 50, 70, 80, 30, 40],
       },
     ],
