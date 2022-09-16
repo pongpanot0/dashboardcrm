@@ -10,39 +10,47 @@ import Order from "./components/Order/Order";
 import Setting from "./components/Setting/Setting";
 import Addorder from "./components/Order/Addorder";
 import Orderupdate from "./components/Order/Orderupdate";
+import Addcustomer from "./components/Customer/Addcustomer";
+import AddShooting from "./components/Setting/AddShooting";
+import Login from "./components/Login/Login";
+import Addproduct from "./components/Product/Addproduct";
 function App() {
   const MainContainer = () => (
     <>
-      <Sidebar />
-      <Routes>
-        <Route path="/" element={<MainDash />} />
-        <Route path="/Customer" exact element={<Customer />} />
-        <Route path="/product" exact element={<Product />} />
-        <Route path="/supplier" exact element={<Supplier />} />
-        <Route path="/Order" exact element={<Order />} />
-        <Route path="/Setting" exact element={<Setting />} />
-        <Route path="/Addorder" exact element={<Addorder />} />
-        <Route path="/Orderupdate/:id" exact element={<Orderupdate />} />
-      </Routes>
-      <RightSide />
+      <div className="App">
+        <div className="AppGlass">
+          <Sidebar />
+          <Routes>
+            <Route path="/" element={<MainDash />} />
+            <Route path="/Customer" exact element={<Customer />} />
+            <Route path="/product" exact element={<Product />} />
+            <Route path="/supplier" exact element={<Supplier />} />
+            <Route path="/Order" exact element={<Order />} />
+            <Route path="/Setting" exact element={<Setting />} />
+            <Route path="/Addorder" exact element={<Addorder />} />
+            <Route path="/Orderupdate/:id" exact element={<Orderupdate />} />
+            <Route path="/Addcustomer" exact element={<Addcustomer />} />
+            <Route path="/AddShooting" exact element={<AddShooting />} />
+            <Route path="/addproduct" exact element={<Addproduct />} />
+            
+          </Routes>
+          <RightSide />
+        </div>
+      </div>
     </>
   );
-  /*   const PublicLink = () => (
+  const PublicLink = () => (
     <>
       <Routes className="">
-        <Route path="/qrcodeshow/:id" element={<QrcodeShow />} />
+        <Route path="/" exact element={<Login />} />
       </Routes>
     </>
-  ); */
+  );
   return (
-    <div className="App">
-      <div className="AppGlass">
-        <Routes>
-          <Route path="/*" element={<MainContainer />} />
-          {/*   <Route path="/publiclink/*" element={<PublicLink />} /> */}
-        </Routes>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/*" element={<MainContainer />} />
+      <Route path="/login/*" element={<PublicLink />} />
+    </Routes>
   );
 }
 

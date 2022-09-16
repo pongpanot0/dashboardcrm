@@ -22,6 +22,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import "./Setting.css";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -80,28 +82,22 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "product_name",
-    numeric: false,
-    disablePadding: true,
-    label: "product_name",
-  },
-  {
-    id: "supplies_id",
+    id: "Shooting_name",
     numeric: true,
     disablePadding: false,
-    label: "supplies_id",
+    label: "Shooting_name",
   },
   {
-    id: "product_price",
+    id: "Shooting_month",
     numeric: true,
     disablePadding: false,
-    label: "product_price",
+    label: "Shooting_month",
   },
   {
-    id: "product_type",
+    id: "Shooting_amount",
     numeric: true,
     disablePadding: false,
-    label: "product_type",
+    label: "Shooting_amount",
   },
 ];
 
@@ -240,13 +236,13 @@ export default function Setting() {
   const getData = () => {
     const items = localStorage.getItem("company_id");
     axios
-      .get(`${process.env.REACT_APP_API_KEY}/supplier/getall/1`)
+      .get(`${process.env.REACT_APP_API_KEY}/shooting/getall/${items}`)
       .then((res) => {
         console.log(res.data);
         setSupplier(res.data.data);
       });
   };
- 
+
   const handleRequestSort = (event, customer_id) => {
     const isAsc = orderBy === customer_id && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -299,9 +295,12 @@ export default function Setting() {
 
   return (
     <div className="MainDash">
-      <h1>Admin/Supplier</h1>
+      <h1>Admin/Setting</h1>
       <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%" }}>
+        <Button variant="contained" component={Link} to="/AddShooting">
+          Add Shooting{" "}
+        </Button>
+        <Paper sx={{ width: "100%", marginTop: 5 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table
@@ -322,17 +321,17 @@ export default function Setting() {
                 {stableSort(supplier, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.customer_id);
+                    const isItemSelected = isSelected(row.Shooting_id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.customer_id)}
+                        onClick={(event) => handleClick(event, row.Shooting_id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.customer_id}
+                        key={row.Shooting_id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -344,17 +343,12 @@ export default function Setting() {
                             }}
                           />
                         </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.Supplier_Name}
+                        <TableCell id={labelId} scope="row" padding="none">
+                          {row.Shooting_name}
                         </TableCell>
-                        <TableCell>{row.Phone}</TableCell>
-                        <TableCell>{row.Email}</TableCell>
-                        <TableCell>{row.Adress}</TableCell>
+
+                        <TableCell>{row.Shooting_month}</TableCell>
+                        <TableCell>{row.Shooting_amount}</TableCell>
                       </TableRow>
                     );
                   })}

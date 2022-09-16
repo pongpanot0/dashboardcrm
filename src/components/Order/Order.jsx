@@ -27,8 +27,10 @@ import { Link } from "react-router-dom";
 import Card from "../Card/Card";
 import { UilUsdSquare, UilMoneyWithdrawal } from "@iconscout/react-unicons";
 import { UilClipboardAlt } from "@iconscout/react-unicons";
-import { Button } from "@mui/material";
+import { Button, Select } from "@mui/material";
 import Chip from "@mui/material/Chip";
+import { useState } from "react";
+import MenuItem from "@mui/material/MenuItem";
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -270,49 +272,67 @@ export default function Product() {
   const [count3, setcount3] = React.useState([]);
   const [count4, setcount4] = React.useState([]);
   const [sum, setSum] = React.useState([]);
-  const notsuccess = count1+count2+count3
-  const math = product.map((number) => number.product_amount);
+
   const creat = product.map((number) => number.created_at);
-  console.log(creat);
-  const success = ~~count4*100/count
-  const notsucpercen = notsuccess*100/count
-  console.log(~~success)
+  const success = (~~count4 * 100) / count;
+
+  const neworder = (~~count1 * 100) / count;
+  const show = (~~count2 * 100) / count;
+  const talk = (~~count3 * 100) / count;
+
   const cardsData = [
     {
-      title: "จำนวนงานทั้งหมด",
+      title: "งานใหม่",
       color: {
         backGround: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
         boxShadow: "0px 10px 20px 0px #e0c6f5",
       },
-      barValue: 100,
-      value: count,
+      barValue: ~~neworder,
+      value: count1,
       png: UilUsdSquare,
       series: [
         {
           name: "Product",
-          data: math,
+          data: count1,
         },
       ],
       create: creat,
     },
     {
-      title: "งานที่ยังไม่เสร็จ",
+      title: "นำเสนอ",
       color: {
         backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
         boxShadow: "0px 10px 20px 0px #FDC0C7",
       },
-      barValue: ~~notsucpercen,
-      value: notsuccess,
+      barValue: ~~show,
+      value: count2,
       png: UilMoneyWithdrawal,
       series: [
         {
           name: "Sale",
-          data: [10, 100, 50, 70, 80, 30, 40],
+          data: count2,
         },
       ],
     },
     {
-      title: "งานที่เสร็จแล้ว",
+      title: "ต่อรอง",
+      color: {
+        backGround:
+          "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",
+        boxShadow: "0px 10px 20px 0px #F9D59B",
+      },
+      barValue: ~~talk,
+      value: count3,
+      png: UilClipboardAlt,
+      series: [
+        {
+          name: "Expenses",
+          data: count3,
+        },
+      ],
+    },
+    {
+      title: "ปิดการขาย",
       color: {
         backGround:
           "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",
@@ -324,18 +344,19 @@ export default function Product() {
       series: [
         {
           name: "Expenses",
-          data: [10, 25, 15, 30, 12, 15, 20],
+          data: count4,
         },
       ],
     },
   ];
 
+  const [orderdetail, setOrderdetail] = useState("");
   React.useEffect(() => {
     getData();
   }, []);
   const getData = () => {
     const items = localStorage.getItem("company_id");
-    axios.get(`${process.env.REACT_APP_API_KEY}/order/getall/1`).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_KEY}/order/getall/${items}`).then((res) => {
       console.log(res);
       setSum(res.data.sum);
       setProduct(res.data.data);
@@ -384,6 +405,9 @@ export default function Product() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+  const handleChange = (event) => {
+    setOrderdetail(event.target.value);
+  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -395,11 +419,6 @@ export default function Product() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  /*   const timeline = product.map((row) => {
-    if (row.order_timeline === 1) {
-      return <Chip label="primary" color="primary" />;
-    }
-  }); */
 
   return (
     <div className="MainDash">
@@ -430,6 +449,21 @@ export default function Product() {
         <Paper sx={{ width: "100%", marginTop: 5 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={orderdetail}
+              label="สถานะงาน"
+              onChange={handleChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+            >
+              <MenuItem value="">ทั้งหมด</MenuItem>
+              <MenuItem value={"1"}>เปิดงานใหม่</MenuItem>
+              <MenuItem value={"2"}>เสนอ</MenuItem>
+              <MenuItem value={"3"}>ต่อรอง</MenuItem>
+              <MenuItem value={"4"}>ปิดงาน</MenuItem>
+            </Select>
             <Table
               aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
@@ -446,6 +480,12 @@ export default function Product() {
                 {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
                 {stableSort(product, getComparator(order, orderBy))
+                  .filter(
+                    (row) =>
+                      // note that I've incorporated the searchedVal length check here
+                      !orderdetail.length ||
+                      row.order_timeline.toString().includes(orderdetail)
+                  )
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.order_id);
@@ -493,18 +533,33 @@ export default function Product() {
                         );
                       }
                     };
-                    const ButtonAdd = () =>{
-                      if(row.order_timeline === 4){
-                        return <Button variant="contained"  color="success" component={Link} to={`/Orderupdate/`+ row.order_id}>ดูรายละเอียด</Button>
+                    const ButtonAdd = () => {
+                      if (row.order_timeline === 4) {
+                        return (
+                          <Button
+                            variant="contained"
+                            color="success"
+                            component={Link}
+                            to={`/Orderupdate/` + row.order_id}
+                          >
+                            ดูรายละเอียด
+                          </Button>
+                        );
+                      } else {
+                        return (
+                          <Button
+                            variant="contained"
+                            component={Link}
+                            to={`/Orderupdate/` + row.order_id}
+                          >
+                            อัพเดทสถานะ
+                          </Button>
+                        );
                       }
-                      else {
-                        return <Button variant="contained"  component={Link} to={`/Orderupdate/`+ row.order_id}>อัพเดทสถานะ</Button>
-                      }
-                    }
+                    };
                     return (
                       <TableRow
                         hover
-                        
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -513,7 +568,9 @@ export default function Product() {
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
-                          onClick={(event) => handleClick(event, row.order_id)}
+                            onClick={(event) =>
+                              handleClick(event, row.order_id)
+                            }
                             color="primary"
                             checked={isItemSelected}
                             inputProps={{
@@ -537,8 +594,10 @@ export default function Product() {
                         <TableCell>{row.created_by}</TableCell>
                         <TableCell>{row.created_at}</TableCell>
                         <TableCell>{row.updated_at}</TableCell>
-                        
-                        <TableCell><ButtonAdd/></TableCell>
+
+                        <TableCell>
+                          <ButtonAdd />
+                        </TableCell>
                       </TableRow>
                     );
                   })}

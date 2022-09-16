@@ -22,7 +22,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "./Customer.css";
+import { Button } from "@mui/material";
+import { UilUsdSquare, UilMoneyWithdrawal } from "@iconscout/react-unicons";
+import { UilClipboardAlt } from "@iconscout/react-unicons";
+import Card from "../Card/Card";
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -246,6 +251,13 @@ export default function Customer() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [customer, setCustomer] = React.useState([]);
+  const [count, setCount] = React.useState([]);
+
+  const [customer_type1, setcustomer_type1] = React.useState([]);
+  const [customer_type2, setcustomer_type2] = React.useState([]);
+  const [customer_sex1, setcustomer_sex1] = React.useState([]);
+  const [customer_sex2, setcustomer_sex2] = React.useState([]);
+
   React.useEffect(() => {
     getData();
   }, []);
@@ -253,9 +265,14 @@ export default function Customer() {
   const getData = () => {
     const items = localStorage.getItem("company_id");
     axios
-      .get(`${process.env.REACT_APP_API_KEY}/customer/getall/1`)
+      .get(`${process.env.REACT_APP_API_KEY}/customer/getall/${items}`)
       .then((res) => {
+        setCount(res.data.count);
         setCustomer(res.data.data);
+        setcustomer_type1(res.data.count.count[0].customer_type1);
+        setcustomer_type2(res.data.count.count2[0].customer_type2);
+        setcustomer_sex1(res.data.count.count3[0].customer_sex1);
+        setcustomer_sex2(res.data.count.count4[0].customer_sex2);
       });
   };
 
@@ -273,7 +290,7 @@ export default function Customer() {
     }
     setSelected([]);
   };
-console.log(customer)
+  console.log(customer);
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -308,12 +325,115 @@ console.log(customer)
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const cardsData = [
+    {
+      title: "customer",
+      color: {
+        backGround: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
+        boxShadow: "0px 10px 20px 0px #e0c6f5",
+      },
+      barValue: ~~customer.length,
+      value: customer.length,
+      png: UilUsdSquare,
+      series: [
+        {
+          name: "Product",
+          data: customer,
+        },
+      ],
+    },
 
+    {
+      title: "นิติบุคคล",
+      color: {
+        backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
+        boxShadow: "0px 10px 20px 0px #FDC0C7",
+      },
+      barValue: ~~customer_type1,
+      value: customer_type1,
+      png: UilMoneyWithdrawal,
+      series: [
+        {
+          name: "Sale",
+          data: customer_type1,
+        },
+      ],
+    },
+    {
+      title: "บุคคลทั่วไป",
+      color: {
+        backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
+        boxShadow: "0px 10px 20px 0px #FDC0C7",
+      },
+      barValue: ~~customer_type2,
+      value: customer_type2,
+      png: UilMoneyWithdrawal,
+      series: [
+        {
+          name: "Sale",
+          data: customer_type2,
+        },
+      ],
+    },
+    {
+      title: "เพศชาย",
+      color: {
+        backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
+        boxShadow: "0px 10px 20px 0px #FDC0C7",
+      },
+      barValue: ~~customer_sex1,
+      value: customer_sex1,
+      png: UilMoneyWithdrawal,
+      series: [
+        {
+          name: "Sale",
+          data: customer_sex1,
+        },
+      ],
+    },
+    {
+      title: "เพศหญิง",
+      color: {
+        backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
+        boxShadow: "0px 10px 20px 0px #FDC0C7",
+      },
+      barValue: ~~customer_sex2,
+      value: customer_sex2,
+      png: UilMoneyWithdrawal,
+      series: [
+        {
+          name: "Sale",
+          data: customer_sex2,
+        },
+      ],
+    },
+  ];
   return (
     <div className="MainDash">
+      <div className="Cards">
+        {cardsData.map((card, id) => {
+          return (
+            <div className="parentContainer" key={id}>
+              <Card
+                title={card.title}
+                color={card.color}
+                barValue={card.barValue}
+                value={card.value}
+                png={card.png}
+                series={card.series}
+                create={card.create}
+                chart={false}
+              />
+            </div>
+          );
+        })}
+      </div>
       <Box sx={{ width: "100%" }}>
-      <h1>Admin/Customer</h1>
-        <Paper sx={{ width: "100%"}}>
+        <h1>Admin/Customer</h1>
+        <Button variant="contained" component={Link} to="/Addcustomer">
+          Add
+        </Button>
+        <Paper sx={{ width: "100%", marginTop: 5 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table

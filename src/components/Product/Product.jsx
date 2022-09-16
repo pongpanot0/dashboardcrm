@@ -23,6 +23,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import "./Product.css";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -267,7 +269,7 @@ export default function Product() {
   const getData = () => {
     const items = localStorage.getItem("company_id");
     axios
-      .get(`${process.env.REACT_APP_API_KEY}/product/getall/1`)
+      .get(`${process.env.REACT_APP_API_KEY}/product/getall/${items}`)
       .then((res) => {
         setProduct(res.data.data);
       });
@@ -327,6 +329,7 @@ export default function Product() {
     <div className="MainDash">
         <h1>Admin/Product</h1>
       <Box sx={{ width: "100%" }}>
+        <Button variant="contained" component={Link} to='/addproduct'>AddProduct</Button>
         <Paper sx={{ width: "100%" }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
