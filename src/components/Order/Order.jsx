@@ -273,6 +273,7 @@ export default function Product() {
   const [count4, setcount4] = React.useState([]);
   const [sum, setSum] = React.useState([]);
 
+
   const creat = product.map((number) => number.created_at);
   const success = (~~count4 * 100) / count;
 
@@ -443,10 +444,10 @@ export default function Product() {
       </div>
 
       <Box sx={{ width: "100%" }}>
-        <Button variant="contained" component={Link} to="/Addorder">
+        <Button variant="contained" style={{marginTop:10}} component={Link} to="/Addorder">
           Add
         </Button>
-        <Paper sx={{ width: "100%", marginTop: 5 }}>
+        <Paper sx={{ width: "100%" ,height:'90%'}}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Select

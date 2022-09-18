@@ -24,7 +24,7 @@ import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import "./Product.css";
 import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -81,12 +81,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-
-
-
-
-
-
 const headCells = [
   {
     id: "product_name",
@@ -106,18 +100,7 @@ const headCells = [
     disablePadding: false,
     label: "product_price",
   },
-  {
-    id: "product_type",
-    numeric: true,
-    disablePadding: false,
-    label: "product_type",
-  },
-  {
-    id: "product_group",
-    numeric: true,
-    disablePadding: false,
-    label: "product_group",
-  },
+
   {
     id: "product_cost",
     numeric: true,
@@ -130,8 +113,12 @@ const headCells = [
     disablePadding: false,
     label: "product_amount",
   },
-
-  
+  {
+    id: "Action",
+    numeric: false,
+    disablePadding: false,
+    label: "Action",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -262,8 +249,11 @@ export default function Product() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [product, setProduct] = React.useState([]);
+  const [role, getRole] = React.useState("");
+
   React.useEffect(() => {
     getData();
+    getRole(localStorage.getItem("product"));
   }, []);
 
   const getData = () => {
@@ -274,22 +264,20 @@ export default function Product() {
         setProduct(res.data.data);
       });
   };
-  console.log(product);
-  const handleRequestSort = (event, customer_id) => {
-    const isAsc = orderBy === customer_id && order === "asc";
+  const handleRequestSort = (event, product_id) => {
+    const isAsc = orderBy === product_id && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(customer_id);
+    setOrderBy(product_id);
   };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.product_id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -327,14 +315,15 @@ export default function Product() {
 
   return (
     <div className="MainDash">
-        <h1>Admin/Product</h1>
+      <h1>Admin/Product</h1>
       <Box sx={{ width: "100%" }}>
-        <Button variant="contained" component={Link} to='/addproduct'>AddProduct</Button>
+        <Button variant="contained" component={Link} to="/addproduct">
+          AddProduct
+        </Button>
         <Paper sx={{ width: "100%" }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table
-          
               aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
             >
@@ -352,21 +341,47 @@ export default function Product() {
                 {stableSort(product, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.customer_id);
+                    const isItemSelected = isSelected(row.product_id);
                     const labelId = `enhanced-table-checkbox-${index}`;
-
+                    const Rolebutton = () => {
+                      if (role == 1) {
+                        return (
+                          <>
+                            <Button
+                              component={Link}
+                              to={"/ProductEdit/" + row.product_id}
+                            >
+                              {" "}
+                              แก้ไขข้อมูล / ดูข้อมูล
+                            </Button>
+                          </>
+                        );
+                      } else {
+                        return (
+                          <Button
+                            component={Link}
+                            to={"/ProductEdit/" + row.product_id}
+                          >
+                            {" "}
+                            ดูข้อมูล
+                          </Button>
+                        );
+                      }
+                    };
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.customer_id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.customer_id}
+                        key={row.product_id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
+                            onClick={(event) =>
+                              handleClick(event, row.product_id)
+                            }
                             color="primary"
                             checked={isItemSelected}
                             inputProps={{
@@ -384,10 +399,12 @@ export default function Product() {
                         </TableCell>
                         <TableCell>{row.supplies_id}</TableCell>
                         <TableCell>{row.product_price}</TableCell>
-                        <TableCell>{row.product_type}</TableCell>
-                        <TableCell>{row.product_group}</TableCell>
+
                         <TableCell>{row.product_cost}</TableCell>
                         <TableCell>{row.product_amount}</TableCell>
+                        <TableCell>
+                          <Rolebutton />
+                        </TableCell>
                       </TableRow>
                     );
                   })}

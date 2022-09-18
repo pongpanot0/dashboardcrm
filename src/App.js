@@ -1,8 +1,8 @@
 import "./App.css";
-import MainDash from "./components/MainDash/MainDash";
+
 import RightSide from "../src/components/RigtSide/RightSide";
 import Sidebar from "../src/components/Sidebar";
-import { Route, Routes, Link, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Customer from "./components/Customer/Customer";
 import Product from "./components/Product/Product";
 import Supplier from "./components/Supplier/Supplier";
@@ -14,6 +14,8 @@ import Addcustomer from "./components/Customer/Addcustomer";
 import AddShooting from "./components/Setting/AddShooting";
 import Login from "./components/Login/Login";
 import Addproduct from "./components/Product/Addproduct";
+import MainDash from "./components/MainDash/Maindash";
+import ProductEdit from "./components/Product/ProductEdit";
 function App() {
   const MainContainer = () => (
     <>
@@ -32,7 +34,7 @@ function App() {
             <Route path="/Addcustomer" exact element={<Addcustomer />} />
             <Route path="/AddShooting" exact element={<AddShooting />} />
             <Route path="/addproduct" exact element={<Addproduct />} />
-            
+            <Route path="/ProductEdit/:id" exact element={<ProductEdit />} />
           </Routes>
           <RightSide />
         </div>
