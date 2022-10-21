@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+
 
 const SettingQuatation = () => {
-  return (
-    <div>SettingQuatation</div>
-  )
-}
+ 
 
-export default SettingQuatation
+  return (
+    <div>
+      JrHello
+    </div>
+  );
+};
+
+export default SettingQuatation;

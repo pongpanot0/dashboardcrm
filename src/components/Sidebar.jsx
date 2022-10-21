@@ -6,6 +6,14 @@ import { SidebarData } from "../Data/Data";
 import { UilBars } from "@iconscout/react-unicons";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+const role = localStorage.getItem("role");
+console.log(role);
+const Adminsidebar = () => {
+  if (role == 1) {
+    return <Button component={Link} to='/dashboard'>For Admin Setting</Button>;
+  }
+};
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -72,10 +80,12 @@ const Sidebar = () => {
                   <item.icon />
 
                   <span> {item.heading}</span>
+                 
                 </div>
               </Link>
             );
           })}
+           <Adminsidebar />
           {/* signoutIcon */}
           <div className="menuItem">
             <UilSignOutAlt onClick={logout} />

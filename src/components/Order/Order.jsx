@@ -116,7 +116,7 @@ const headCells = [
     id: "created_by",
     numeric: true,
     disablePadding: false,
-    label: "created_by",
+    label: "รับผิดชอบโดย",
   },
   {
     id: "created_at",
@@ -273,7 +273,6 @@ export default function Product() {
   const [count4, setcount4] = React.useState([]);
   const [sum, setSum] = React.useState([]);
 
-
   const creat = product.map((number) => number.created_at);
   const success = (~~count4 * 100) / count;
 
@@ -356,17 +355,56 @@ export default function Product() {
     getData();
   }, []);
   const getData = () => {
-    const items = localStorage.getItem("company_id");
-    axios.get(`${process.env.REACT_APP_API_KEY}/order/getall/${items}`).then((res) => {
-      console.log(res);
-      setSum(res.data.sum);
-      setProduct(res.data.data);
-      setcount(res.data.count);
-      setcount1(res.data.count1);
-      setcount2(res.data.count2);
-      setcount3(res.data.count3);
-      setcount4(res.data.count4);
-    });
+    const role = localStorage.getItem("role");
+    if (role == 1) {
+      const items = localStorage.getItem("company_id");
+      axios
+        .get(`${process.env.REACT_APP_API_KEY}/order/getall/${items}`)
+        .then((res) => {
+          console.log(res,'getall');
+          setSum(res.data.sum);
+          setProduct(res.data.data);
+          setcount(res.data.count);
+          setcount1(res.data.count1);
+          setcount2(res.data.count2);
+          setcount3(res.data.count3);
+          setcount4(res.data.count4);
+        });
+    }
+    if (role == 2) {
+      const organize_id = localStorage.getItem("organize_id");
+      axios
+        .get(
+          `${process.env.REACT_APP_API_KEY}/order/getorderDepartment/${organize_id}`
+        )
+        .then((res) => {
+          console.log(res,'getorderDepartment');
+          setSum(res.data.sum);
+          setProduct(res.data.data);
+          setcount(res.data.count);
+          setcount1(res.data.count1);
+          setcount2(res.data.count2);
+          setcount3(res.data.count3);
+          setcount4(res.data.count4);
+        });
+    }   
+     if (role == 3) {
+      const user_id = localStorage.getItem("user_id");
+      axios
+        .get(
+          `${process.env.REACT_APP_API_KEY}/order/getorderRepro/${user_id}`
+        )
+        .then((res) => {
+          console.log(res,'getorderDepartment');
+          setSum(res.data.sum);
+          setProduct(res.data.data);
+          setcount(res.data.count);
+          setcount1(res.data.count1);
+          setcount2(res.data.count2);
+          setcount3(res.data.count3);
+          setcount4(res.data.count4);
+        });
+    }
   };
   const handleRequestSort = (event, customer_id) => {
     const isAsc = orderBy === customer_id && order === "asc";
@@ -444,10 +482,15 @@ export default function Product() {
       </div>
 
       <Box sx={{ width: "100%" }}>
-        <Button variant="contained" style={{marginTop:10}} component={Link} to="/Addorder">
+        <Button
+          variant="contained"
+          style={{ marginTop: 10 }}
+          component={Link}
+          to="/Addorder"
+        >
           Add
         </Button>
-        <Paper sx={{ width: "100%" ,height:'90%'}}>
+        <Paper sx={{ width: "100%", height: "90%" }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Select
@@ -592,7 +635,9 @@ export default function Product() {
                         <TableCell>
                           <Order_timeline />
                         </TableCell>
-                        <TableCell>{row.created_by}</TableCell>
+                        <TableCell>
+                          {row.user_firstname} {row.user_surname}
+                        </TableCell>
                         <TableCell>{row.created_at}</TableCell>
                         <TableCell>{row.updated_at}</TableCell>
 

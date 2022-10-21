@@ -14,8 +14,9 @@ const Addcustomer = () => {
   const [customer_firstname, setcustomer_firstname] = React.useState("");
   const [customer_lastname, setcustomer_lastname] = React.useState("");
   const [customer_phone, setcustomer_phone] = React.useState("");
-  const [customer_sex, setcustomer_sex] = React.useState("");
   const [customer_type, setcustomer_type] = React.useState("");
+  const [customer_taxprayer, setcustomer_taxprayer] = React.useState("");
+  const [customer_location, setcustomer_location] = React.useState("");
   const handleChange = (event) => {
     setcustomer_type(event.target.value);
   };
@@ -27,9 +28,10 @@ const Addcustomer = () => {
         customer_firstname: customer_firstname,
         customer_lastname: customer_lastname,
         customer_phone: customer_phone,
-        customer_sex: customer_sex,
         customer_type: customer_type,
-        company_id:items
+        company_id: items,
+        customer_taxprayer: customer_taxprayer,
+        customer_location: customer_location,
       })
       .then((res) => {
         if (res.data.status === 200) {
@@ -74,17 +76,28 @@ const Addcustomer = () => {
               }}
             />
           </Grid>
+  
           <Grid item xs={4}>
             <TextField
               fullWidth
-              label="setcustomer_sex"
+              label="setcustomer_location"
               id="fullWidth"
               onChange={(e) => {
-                setcustomer_sex(e.target.value);
+                setcustomer_location(e.target.value);
               }}
             />
           </Grid>
           <Grid item xs={4}>
+            <TextField
+              fullWidth
+              label="setcustomer_taxprayer"
+              id="fullWidth"
+              onChange={(e) => {
+                setcustomer_taxprayer(e.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item xs={8}>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -101,7 +114,12 @@ const Addcustomer = () => {
           </Grid>
         </Grid>
         <br></br>
-        <Button style={{ marginTop: 5 ,marginBottom:15}} fullWidth variant="contained" onClick={addorder}>
+        <Button
+          style={{ marginTop: 5, marginBottom: 15 }}
+          fullWidth
+          variant="contained"
+          onClick={addorder}
+        >
           Add
         </Button>
         <br></br>

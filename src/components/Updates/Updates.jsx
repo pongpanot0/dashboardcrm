@@ -3,7 +3,6 @@ import "./Updates.css";
 import { UpdatesData } from "../../Data/Data";
 
 const Updates = () => {
-  console.log(UpdatesData)
   return (
     <div className="Updates">
       {UpdatesData.map((update) => {

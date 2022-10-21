@@ -16,14 +16,12 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import "./Customer.css";
+import "./dashboard.css";
 import { Button } from "@mui/material";
 import { UilUsdSquare, UilMoneyWithdrawal } from "@iconscout/react-unicons";
 import { UilClipboardAlt } from "@iconscout/react-unicons";
@@ -86,28 +84,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "customer_firstname",
+    id: "index",
     numeric: false,
     disablePadding: true,
-    label: "customer_firstname",
+    label: "index",
   },
   {
-    id: "customer_lastname",
+    id: "user_firstname",
     numeric: true,
     disablePadding: false,
-    label: "customer_lastname",
+    label: "user_firstname",
   },
   {
-    id: "customer_phone",
+    id: "user_surname",
     numeric: true,
     disablePadding: false,
-    label: "customer_phone",
+    label: "user_surname",
   },
   {
-    id: "customer_type",
+    id: "organize_id",
     numeric: true,
     disablePadding: false,
-    label: "customer_type",
+    label: "organize_id",
+  },
+  {
+    id: "email",
+    numeric: true,
+    disablePadding: false,
+    label: "email",
   },
   {
     id: "Action",
@@ -212,7 +216,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Customers
+          Person
         </Typography>
       )}
 
@@ -237,32 +241,45 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function Customer() {
+export default function Dashboard() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [customer, setCustomer] = React.useState([]);
   const [count, setCount] = React.useState([]);
-
-  const [customer_type1, setcustomer_type1] = React.useState([]);
-  const [customer_type2, setcustomer_type2] = React.useState([]);
-
+  const [person, setPerson] = React.useState([]);
   React.useEffect(() => {
     getData();
+    getcountData();
   }, []);
+  const getcountData = () => {
+    const items = localStorage.getItem("company_id");
+    axios
+      .get(`${process.env.REACT_APP_API_KEY}/person/getUsercount/${items}`)
+      .then((res) => {
+        setCount(res.data.data[0].count);
+        console.log(res.data.data[0]);
+      });
+  };
+
+  const onDelete = (id) => {
+    console.log(id);
+    axios
+      .post(`${process.env.REACT_APP_API_KEY}/person/deleteuser/${id}`)
+      .then((res) => {
+        console.log(res.data.data);
+        getData();
+      });
+  };
 
   const getData = () => {
     const items = localStorage.getItem("company_id");
     axios
-      .get(`${process.env.REACT_APP_API_KEY}/customer/getall/${items}`)
+      .get(`${process.env.REACT_APP_API_KEY}/person/getall/${items}`)
       .then((res) => {
-        setCount(res.data.count);
-        setCustomer(res.data.data);
-        setcustomer_type1(res.data.count.count[0].customer_type1);
-        setcustomer_type2(res.data.count.count2[0].customer_type2);
+        setPerson(res.data.data);
       });
   };
 
@@ -280,7 +297,6 @@ export default function Customer() {
     }
     setSelected([]);
   };
-  console.log(customer);
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -317,52 +333,18 @@ export default function Customer() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
   const cardsData = [
     {
-      title: "customer",
+      title: "Person",
       color: {
         backGround: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
         boxShadow: "0px 10px 20px 0px #e0c6f5",
       },
-      barValue: ~~customer.length,
-      value: customer.length,
+      barValue: ~~count,
+      value: count,
       png: UilUsdSquare,
       series: [
         {
-          name: "Product",
-          data: customer,
-        },
-      ],
-    },
-
-    {
-      title: "นิติบุคคล",
-      color: {
-        backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
-        boxShadow: "0px 10px 20px 0px #FDC0C7",
-      },
-      barValue: ~~customer_type1,
-      value: customer_type1,
-      png: UilMoneyWithdrawal,
-      series: [
-        {
-          name: "Sale",
-          data: customer_type1,
-        },
-      ],
-    },
-
-    {
-      title: "บุคคลทั่วไป",
-      color: {
-        backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
-        boxShadow: "0px 10px 20px 0px #FDC0C7",
-      },
-      barValue: ~~customer_type2,
-      value: customer_type2,
-      png: UilMoneyWithdrawal,
-      series: [
-        {
-          name: "Sale",
-          data: customer_type2,
+          name: "Person",
+          data: count,
         },
       ],
     },
@@ -388,8 +370,8 @@ export default function Customer() {
         })}
       </div>
       <Box sx={{ width: "100%" }}>
-        <h1>Admin/Customer</h1>
-        <Button variant="contained" component={Link} to="/Addcustomer">
+        <h1>Admin/Setting</h1>
+        <Button variant="contained" component={Link} to="/addminsetting">
           Add
         </Button>
         <Paper sx={{ width: "100%", marginTop: 5 }}>
@@ -411,24 +393,24 @@ export default function Customer() {
               <TableBody>
                 {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                {stableSort(customer, getComparator(order, orderBy))
+                {stableSort(person, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.customer_id);
+                    const isItemSelected = isSelected(row.user_id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.customer_id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.customer_id}
-                        selected={isItemSelected}
+                        key={index}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
+                            selected={isItemSelected}
+                            onClick={(event) => handleClick(event, row.user_id)}
                             color="primary"
                             checked={isItemSelected}
                             inputProps={{
@@ -442,12 +424,27 @@ export default function Customer() {
                           scope="row"
                           padding="none"
                         >
-                          {row.customer_firstname}
+                          {index + 1}
                         </TableCell>
-                        <TableCell>{row.customer_lastname}</TableCell>
-                        <TableCell>{row.customer_phone}</TableCell>
-                   
-                        <TableCell>{row.customer_type}</TableCell>
+                        <TableCell>{row.user_firstname}</TableCell>
+                        <TableCell>{row.user_surname}</TableCell>
+                        <TableCell>{row.organize_id}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        <TableCell>
+                          <Button
+                            component={Link}
+                            to={"/editperson/" + row.user_id}
+                          >
+                            EditPerson
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              onDelete(row.user_id);
+                            }}
+                          >
+                            Delete Uer
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     );
                   })}

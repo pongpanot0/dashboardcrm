@@ -32,6 +32,7 @@ const Orderupdate = () => {
       return <h1 style={{ textAlign: "center" }}>รายละเอียด</h1>;
     }
   };
+
   React.useEffect(() => {
     getData();
   }, []);
@@ -45,6 +46,9 @@ const Orderupdate = () => {
   };
   const navigate = useNavigate();
   const updateOrder = () => {
+    const company = localStorage.getItem("company_id");
+    const organize_id = localStorage.getItem("organize_id");
+    const user_id = localStorage.getItem("user_id");
     setSuccess(true);
     if (order === 1) {
       axios
@@ -54,10 +58,13 @@ const Orderupdate = () => {
           order_id: id,
           order_timeline: order,
           timeline: 2,
+          company_id: company,
+          organize_id: organize_id,
+          updated_by: user_id,
         })
         .then((res) => {
           if (res.data.status === 200) {
-            alert('ok')
+            alert("ok");
             navigate("/Order");
           }
           if (res.data.status === 400) {
@@ -72,10 +79,13 @@ const Orderupdate = () => {
           order_id: id,
           order_timeline: order,
           timeline: 3,
+          company_id: company,
+          organize_id: organize_id,
+          updated_by: user_id,
         })
         .then((res) => {
           if (res.data.status === 200) {
-            alert('ok')
+            alert("ok");
             navigate("/Order");
           }
           if (res.data.status === 400) {
@@ -90,10 +100,13 @@ const Orderupdate = () => {
           order_id: id,
           order_timeline: order,
           timeline: 4,
+          company_id: company,
+          organize_id: organize_id,
+          updated_by: user_id,
         })
         .then((res) => {
           if (res.data.status === 200) {
-            alert('ok')
+            alert("ok");
             navigate("/Order");
           }
           if (res.data.status === 400) {

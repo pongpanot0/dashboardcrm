@@ -22,6 +22,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import "./Supplier.css";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -240,13 +242,13 @@ export default function Product() {
   const getData = () => {
     const items = localStorage.getItem("company_id");
     axios
-      .get(`${process.env.REACT_APP_API_KEY}/supplier/getall/1`)
+      .get(`${process.env.REACT_APP_API_KEY}/supplier/getall/${items}`)
       .then((res) => {
         console.log(res.data);
         setSupplier(res.data.data);
       });
   };
- 
+
   const handleRequestSort = (event, customer_id) => {
     const isAsc = orderBy === customer_id && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -301,6 +303,7 @@ export default function Product() {
     <div className="MainDash">
       <h1>Admin/Supplier</h1>
       <Box sx={{ width: "100%" }}>
+        <Button variant="contained" component={Link} to="/AddSupplier" > Add supplier </Button>
         <Paper sx={{ width: "100%" }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>

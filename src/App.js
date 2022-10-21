@@ -16,6 +16,13 @@ import Login from "./components/Login/Login";
 import Addproduct from "./components/Product/Addproduct";
 import MainDash from "./components/MainDash/Maindash";
 import ProductEdit from "./components/Product/ProductEdit";
+import AddSupplier from "./components/Supplier/AddSupplier";
+import SettingQuatation from "./components/Setting/SettingQuatation";
+import Createperson from "./components/Admin/Person/Createperson";
+import Dashboard from "./components/Admin/Dashboard";
+import Editperson from "./components/Admin/Person/Editperson";
+import Settingcompany from "./components/Setting/Settingcompany";
+import Add from "./components/Order/Add";
 function App() {
   const MainContainer = () => (
     <>
@@ -28,13 +35,22 @@ function App() {
             <Route path="/product" exact element={<Product />} />
             <Route path="/supplier" exact element={<Supplier />} />
             <Route path="/Order" exact element={<Order />} />
-            <Route path="/Setting" exact element={<Setting />} />
-            <Route path="/Addorder" exact element={<Addorder />} />
+            <Route path="/Setting" exact element={<Settingcompany />} />
+            <Route path="/Addorder" exact element={<Add />} />
             <Route path="/Orderupdate/:id" exact element={<Orderupdate />} />
             <Route path="/Addcustomer" exact element={<Addcustomer />} />
             <Route path="/AddShooting" exact element={<AddShooting />} />
             <Route path="/addproduct" exact element={<Addproduct />} />
             <Route path="/ProductEdit/:id" exact element={<ProductEdit />} />
+            <Route path="/AddSupplier" exact element={<AddSupplier />} />
+            <Route
+              path="/SettingQuatation"
+              exact
+              element={<SettingQuatation />}
+            />
+            <Route path="/addminsetting" exact element={<Createperson />} />
+            <Route path="/dashboard" exact element={<Dashboard />} />
+            <Route path="/editperson/:id" exact element={<Editperson />} />
           </Routes>
           <RightSide />
         </div>
@@ -50,8 +66,8 @@ function App() {
   );
   return (
     <Routes>
-      <Route path="/*" element={<MainContainer />} />
       <Route path="/login/*" element={<PublicLink />} />
+      <Route path="/*" element={<MainContainer />} />
     </Routes>
   );
 }
